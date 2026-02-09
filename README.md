@@ -76,7 +76,7 @@ We provide a basic `docker-compose.yml` to reduce setup friction. You are free t
 ---
 
 ### **Submission**
-* Provide a link to a **private GitHub repository**.
+* Provide a link to a **public GitHub repository**.
 * **Deployment (Bonus):** We highly encourage providing a live URL (Vercel, Railway, AWS, etc.).
 * **Setup Guide:** Ensure your README has clear instructions on how to run the app, migrations, and tests locally.
 
