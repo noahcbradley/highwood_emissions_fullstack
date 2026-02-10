@@ -26,11 +26,13 @@ services:
     container_name: emissions_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-emissions}
-      POSTGRES_USER: ${POSTGRES_USER:-emissions}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-emissions}
+      POSTGRES_DB: emissions
+      POSTGRES_USER: emissions
+      POSTGRES_PASSWORD: emissions
+      # Use trust for first-time connections to avoid Windows password issues
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
       - emissions_pg_data:/var/lib/postgresql/data
     healthcheck:

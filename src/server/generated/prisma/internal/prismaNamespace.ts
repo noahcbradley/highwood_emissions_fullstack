@@ -526,6 +526,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const SiteScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  location: 'location',
   emissionLimit: 'emissionLimit',
   totalEmissionsToDate: 'totalEmissionsToDate',
   createdAt: 'createdAt',
@@ -549,6 +550,14 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 

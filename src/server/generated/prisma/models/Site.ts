@@ -39,6 +39,7 @@ export type SiteSumAggregateOutputType = {
 export type SiteMinAggregateOutputType = {
   id: string | null
   name: string | null
+  location: string | null
   emissionLimit: number | null
   totalEmissionsToDate: number | null
   createdAt: Date | null
@@ -48,6 +49,7 @@ export type SiteMinAggregateOutputType = {
 export type SiteMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  location: string | null
   emissionLimit: number | null
   totalEmissionsToDate: number | null
   createdAt: Date | null
@@ -57,6 +59,7 @@ export type SiteMaxAggregateOutputType = {
 export type SiteCountAggregateOutputType = {
   id: number
   name: number
+  location: number
   emissionLimit: number
   totalEmissionsToDate: number
   createdAt: number
@@ -78,6 +81,7 @@ export type SiteSumAggregateInputType = {
 export type SiteMinAggregateInputType = {
   id?: true
   name?: true
+  location?: true
   emissionLimit?: true
   totalEmissionsToDate?: true
   createdAt?: true
@@ -87,6 +91,7 @@ export type SiteMinAggregateInputType = {
 export type SiteMaxAggregateInputType = {
   id?: true
   name?: true
+  location?: true
   emissionLimit?: true
   totalEmissionsToDate?: true
   createdAt?: true
@@ -96,6 +101,7 @@ export type SiteMaxAggregateInputType = {
 export type SiteCountAggregateInputType = {
   id?: true
   name?: true
+  location?: true
   emissionLimit?: true
   totalEmissionsToDate?: true
   createdAt?: true
@@ -192,6 +198,7 @@ export type SiteGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type SiteGroupByOutputType = {
   id: string
   name: string
+  location: string | null
   emissionLimit: number
   totalEmissionsToDate: number
   createdAt: Date
@@ -224,6 +231,7 @@ export type SiteWhereInput = {
   NOT?: Prisma.SiteWhereInput | Prisma.SiteWhereInput[]
   id?: Prisma.StringFilter<"Site"> | string
   name?: Prisma.StringFilter<"Site"> | string
+  location?: Prisma.StringNullableFilter<"Site"> | string | null
   emissionLimit?: Prisma.FloatFilter<"Site"> | number
   totalEmissionsToDate?: Prisma.FloatFilter<"Site"> | number
   createdAt?: Prisma.DateTimeFilter<"Site"> | Date | string
@@ -233,6 +241,7 @@ export type SiteWhereInput = {
 export type SiteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
   emissionLimit?: Prisma.SortOrder
   totalEmissionsToDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -245,6 +254,7 @@ export type SiteWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SiteWhereInput[]
   NOT?: Prisma.SiteWhereInput | Prisma.SiteWhereInput[]
   name?: Prisma.StringFilter<"Site"> | string
+  location?: Prisma.StringNullableFilter<"Site"> | string | null
   emissionLimit?: Prisma.FloatFilter<"Site"> | number
   totalEmissionsToDate?: Prisma.FloatFilter<"Site"> | number
   createdAt?: Prisma.DateTimeFilter<"Site"> | Date | string
@@ -254,6 +264,7 @@ export type SiteWhereUniqueInput = Prisma.AtLeast<{
 export type SiteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
   emissionLimit?: Prisma.SortOrder
   totalEmissionsToDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -271,6 +282,7 @@ export type SiteScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SiteScalarWhereWithAggregatesInput | Prisma.SiteScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Site"> | string
   name?: Prisma.StringWithAggregatesFilter<"Site"> | string
+  location?: Prisma.StringNullableWithAggregatesFilter<"Site"> | string | null
   emissionLimit?: Prisma.FloatWithAggregatesFilter<"Site"> | number
   totalEmissionsToDate?: Prisma.FloatWithAggregatesFilter<"Site"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Site"> | Date | string
@@ -280,6 +292,7 @@ export type SiteScalarWhereWithAggregatesInput = {
 export type SiteCreateInput = {
   id?: string
   name: string
+  location?: string | null
   emissionLimit: number
   totalEmissionsToDate?: number
   createdAt?: Date | string
@@ -289,6 +302,7 @@ export type SiteCreateInput = {
 export type SiteUncheckedCreateInput = {
   id?: string
   name: string
+  location?: string | null
   emissionLimit: number
   totalEmissionsToDate?: number
   createdAt?: Date | string
@@ -298,6 +312,7 @@ export type SiteUncheckedCreateInput = {
 export type SiteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissionLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   totalEmissionsToDate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -307,6 +322,7 @@ export type SiteUpdateInput = {
 export type SiteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissionLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   totalEmissionsToDate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -316,6 +332,7 @@ export type SiteUncheckedUpdateInput = {
 export type SiteCreateManyInput = {
   id?: string
   name: string
+  location?: string | null
   emissionLimit: number
   totalEmissionsToDate?: number
   createdAt?: Date | string
@@ -325,6 +342,7 @@ export type SiteCreateManyInput = {
 export type SiteUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissionLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   totalEmissionsToDate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -334,6 +352,7 @@ export type SiteUpdateManyMutationInput = {
 export type SiteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissionLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   totalEmissionsToDate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -343,6 +362,7 @@ export type SiteUncheckedUpdateManyInput = {
 export type SiteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   emissionLimit?: Prisma.SortOrder
   totalEmissionsToDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -357,6 +377,7 @@ export type SiteAvgOrderByAggregateInput = {
 export type SiteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   emissionLimit?: Prisma.SortOrder
   totalEmissionsToDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -366,6 +387,7 @@ export type SiteMaxOrderByAggregateInput = {
 export type SiteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   emissionLimit?: Prisma.SortOrder
   totalEmissionsToDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -379,6 +401,10 @@ export type SiteSumOrderByAggregateInput = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type FloatFieldUpdateOperationsInput = {
@@ -398,6 +424,7 @@ export type DateTimeFieldUpdateOperationsInput = {
 export type SiteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  location?: boolean
   emissionLimit?: boolean
   totalEmissionsToDate?: boolean
   createdAt?: boolean
@@ -407,6 +434,7 @@ export type SiteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type SiteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  location?: boolean
   emissionLimit?: boolean
   totalEmissionsToDate?: boolean
   createdAt?: boolean
@@ -416,6 +444,7 @@ export type SiteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type SiteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  location?: boolean
   emissionLimit?: boolean
   totalEmissionsToDate?: boolean
   createdAt?: boolean
@@ -425,13 +454,14 @@ export type SiteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type SiteSelectScalar = {
   id?: boolean
   name?: boolean
+  location?: boolean
   emissionLimit?: boolean
   totalEmissionsToDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SiteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "emissionLimit" | "totalEmissionsToDate" | "createdAt" | "updatedAt", ExtArgs["result"]["site"]>
+export type SiteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "location" | "emissionLimit" | "totalEmissionsToDate" | "createdAt" | "updatedAt", ExtArgs["result"]["site"]>
 
 export type $SitePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Site"
@@ -439,6 +469,7 @@ export type $SitePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    location: string | null
     emissionLimit: number
     totalEmissionsToDate: number
     createdAt: Date
@@ -868,6 +899,7 @@ export interface Prisma__SiteClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface SiteFieldRefs {
   readonly id: Prisma.FieldRef<"Site", 'String'>
   readonly name: Prisma.FieldRef<"Site", 'String'>
+  readonly location: Prisma.FieldRef<"Site", 'String'>
   readonly emissionLimit: Prisma.FieldRef<"Site", 'Float'>
   readonly totalEmissionsToDate: Prisma.FieldRef<"Site", 'Float'>
   readonly createdAt: Prisma.FieldRef<"Site", 'DateTime'>

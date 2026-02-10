@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class SitesService {
-  private sites = [
-    { id: 1, name: 'Well Pad 1', emissionLimit: 100 },
-    { id: 2, name: 'Well Pad 2', emissionLimit: 200 },
-  ];
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.sites;
+    return this.prisma.site.findMany();
   }
 
   findOne(id: number) {
-    return this.sites.find((site) => site.id === id);
+    return this.prisma.site.findUnique({ where: { id } });
   }
 }
