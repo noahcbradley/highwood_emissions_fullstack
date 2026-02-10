@@ -1,4 +1,26 @@
 services:
+  # FrontEnd React Server
+  client:
+    build: ./src/client
+    container_name: emissions_client
+    env_file: .env.example
+    ports:
+      - "3000:3000"
+    # depends_on:
+    #   - server
+    
+  # Backend API Server
+  server:
+    build: ./src/server
+    container_name: emissions_server
+    env_file: ./src/server/.env
+    ports:
+      - "3001:3001"
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+
+  # Database
   postgres:
     image: postgres:16-alpine
     container_name: emissions_postgres
