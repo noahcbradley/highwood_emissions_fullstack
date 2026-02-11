@@ -5,7 +5,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package.json and lockfile first (for caching)
-COPY src/server/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
@@ -25,7 +25,7 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 
 # Copy package.json & lockfile
-COPY src/server/package*.json ./
+COPY package*.json ./
 
 # Install only production deps
 RUN npm install --omit=dev
