@@ -14,13 +14,26 @@ datasource db {
 }
 
 model Site {
-  id                   String   @id @default(cuid())
+  id                   String           @id @default(cuid())
   name                 String
   location             String?
   emissionLimit        Float
-  totalEmissionsToDate Float    @default(0)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  totalEmissionsToDate Float            @default(0)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  methaneReadings      MethaneReading[]
 
   @@map("sites")
+}
+
+model MethaneReading {
+  id        String   @id @default(cuid())
+  siteId    String
+  value     Float
+  timestamp DateTime // Format is 2026-02-11 08:15:30.000
+
+  site Site @relation(fields: [siteId], references: [id])
+
+  @@unique([siteId, timestamp]) // ensures no duplicates for same timestamp which ensures idempotency
+  @@map("methane_readings")
 }

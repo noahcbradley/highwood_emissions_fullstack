@@ -35,11 +35,17 @@
 
 ### Configure Prisma
 
-In a shell within the server run `npx prisma migrate dev --name init`
-
 #### Generate Prisma
 
 `npx prisma generate`
+
+#### Sync to DB
+
+In a shell within the server run `npx prisma migrate dev --name <unique_migration_name>`
+
+Use unique_migration_name=init for first migration
+
+####
 
 ## Database
 
