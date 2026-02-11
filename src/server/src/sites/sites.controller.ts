@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { SitesService } from './sites.service';
+import { Controller, Get, Param, Post, Body } from '@nestjs/common'
+import { SitesService } from './sites.service'
+import { CreateSiteDto } from './dto/create-site.dto'
 
 @Controller('sites')
 export class SitesController {
@@ -7,11 +8,16 @@ export class SitesController {
 
   @Get()
   getAll() {
-    return this.sitesService.findAll();
+    return this.sitesService.findAll()
   }
 
   @Get(':id')
   getOne(@Param('id') id: string) {
-    return this.sitesService.findOne(Number(id));
+    return this.sitesService.findOne(id)
+  }
+
+  @Post()
+  create(@Body() dto: CreateSiteDto) {
+    return this.sitesService.create(dto)
   }
 }
