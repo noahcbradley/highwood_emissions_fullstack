@@ -1,15 +1,45 @@
-# Use the Node official image
-# https://hub.docker.com/_/node
-FROM node:lts
+# Use official Node.js 18 image
+FROM node:18-alpine AS builder
 
-# Create and change to the app directory.
+# Set working directory
 WORKDIR /app
 
-# Copy local code to the container image
-COPY . ./
+# Copy package.json and lockfile first (for caching)
+COPY src/server/package*.json ./
 
-# Install packages
-RUN npm ci
+# Install dependencies
+RUN npm install
 
-# Serve the app
+# Copy server source code
+COPY src/server ./ 
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build NestJS app
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS runner
+
+WORKDIR /app
+
+# Copy package.json & lockfile
+COPY src/server/package*.json ./
+
+# Install only production deps
+RUN npm install --omit=dev
+
+# Copy built files from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
+
+# Set environment variable for Prisma
+ENV NODE_ENV=production
+
+# Expose port
+EXPOSE 3001
+
+# Start the app
 CMD ["npm", "run", "start:prod"]
