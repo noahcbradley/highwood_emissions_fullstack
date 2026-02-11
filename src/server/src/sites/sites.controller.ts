@@ -11,6 +11,11 @@ export class SitesController {
     return this.sitesService.findAll()
   }
 
+  @Get(':id/metrics')
+  getSiteMetrics(@Param('id') id: string) {
+    return this.sitesService.getSiteMetrics(id)
+  }
+
   @Get(':id')
   getOne(@Param('id') id: string) {
     return this.sitesService.findOne(id)

@@ -45,6 +45,10 @@ In a shell within the server run `npx prisma migrate dev --name <unique_migratio
 
 Use unique_migration_name=init for first migration
 
+#### Check if migrate is needed
+
+`npx prisma migrate dev --preview-feature`
+
 ####
 
 ## Database

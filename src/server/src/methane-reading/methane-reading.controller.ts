@@ -6,7 +6,7 @@ import { CreateMethaneReadingsBatchDto } from './dto/create-methane-reading-batc
 export class MethaneReadingController {
   constructor(private readonly service: MethaneReadingService) {}
 
-  @Post()
+  @Post('ingest')
   async create(@Body() data: CreateMethaneReadingsBatchDto) {
     return this.service.create(data)
   }

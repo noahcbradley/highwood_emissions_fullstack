@@ -35,5 +35,6 @@ model MethaneReading {
   site Site @relation(fields: [siteId], references: [id])
 
   @@unique([siteId, timestamp]) // ensures no duplicates for same timestamp which ensures idempotency
+  @@index([siteId]) // This is a optimization to quickly calculate the sum of values for a single site, used for updating the total emissions of a site
   @@map("methane_readings")
 }

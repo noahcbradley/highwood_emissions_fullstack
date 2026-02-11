@@ -7,42 +7,33 @@ export class MethaneReadingService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateMethaneReadingsBatchDto) {
-    const readings = data.readings.map((r) => ({
-      siteId: r.siteId,
-      value: r.value,
-      timestamp: r.timestamp,
-    }))
+    if (data.readings.length === 0) return
 
-    // Group readings by site for total calculation
-    const totalPerSite = readings.reduce(
-      (acc, r) => {
-        acc[r.siteId] = (acc[r.siteId] || 0) + r.value
-        return acc
-      },
-      {} as Record<string, number>,
+    // Insert all readings (skip duplicates)
+    await this.prisma.methaneReading.createMany({
+      data: data.readings,
+      skipDuplicates: true,
+    })
+
+    // Get affected site IDs
+    const siteIds = Array.from(new Set(data.readings.map((r) => r.siteId)))
+
+    // Recalculate totals per site from DB
+    const totalsFromDb = await this.prisma.methaneReading.groupBy({
+      by: ['siteId'],
+      where: { siteId: { in: siteIds } },
+      _sum: { value: true },
+    })
+
+    // Update totalEmissionsToDate for each site
+    const updateOps = totalsFromDb.map((t) =>
+      this.prisma.site.update({
+        where: { id: t.siteId },
+        data: { totalEmissionsToDate: t._sum.value || 0 },
+      }),
     )
 
-    // Build array of operations
-    const operations = [
-      this.prisma.methaneReading.createMany({
-        data: readings,
-        skipDuplicates: true,
-      }),
-      ...Object.entries(totalPerSite).map(([siteId, sum]) =>
-        this.prisma.site.update({
-          where: { id: siteId },
-          data: { totalEmissionsToDate: { increment: sum } }, // atomic increment
-        }),
-      ),
-    ]
-
-    // Run transaction
-    await this.prisma.$transaction(operations)
-
-    return {
-      inserted: readings.length,
-      totalsUpdated: Object.keys(totalPerSite).length,
-    }
+    await this.prisma.$transaction(updateOps)
   }
 
   findAll() {
