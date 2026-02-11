@@ -61,4 +61,14 @@ Use unique_migration_name=init for first migration
 
 ### Frontend Live
 
+Vercel
+
 ### Backend Live
+
+#### API Server Live
+
+Railway
+
+#### Database Live
+
+Railway

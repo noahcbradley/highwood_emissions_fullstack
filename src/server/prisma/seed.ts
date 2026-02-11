@@ -54,7 +54,7 @@ async function main() {
 
   console.log(`Inserted ${readings.count} methane readings.`)
 
-  // 4️⃣ Update totalEmissionsToDate per site
+  // Update totalEmissionsToDate per site
   for (const site of allSites) {
     const total = await prisma.methaneReading.aggregate({
       where: { siteId: site.id },

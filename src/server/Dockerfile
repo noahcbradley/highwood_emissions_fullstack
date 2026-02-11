@@ -1,12 +1,15 @@
-FROM node:20-alpine
+# Use the Node official image
+# https://hub.docker.com/_/node
+FROM node:lts
 
+# Create and change to the app directory.
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Copy local code to the container image
+COPY . ./
 
-COPY . .
+# Install packages
+RUN npm ci
 
-EXPOSE 3001
-
-CMD ["npm", "run", "start:dev"]
+# Serve the app
+CMD ["npm", "run", "start:prod"]
