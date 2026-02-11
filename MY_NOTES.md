@@ -7,7 +7,7 @@
 - Frontend: Next.js (App Router)
 - Infra: Docker Compose
 
-# Creation Steps
+## Creation Steps
 
 ## Client
 
@@ -25,7 +25,7 @@
 - Use npm
 - `npm install prisma @prisma/client`
 
-### Build
+### Build Server
 
 `docker compose build --no-cache server`
 
@@ -49,8 +49,16 @@ Use unique_migration_name=init for first migration
 
 `npx prisma migrate dev --preview-feature`
 
-####
-
 ## Database
 
-- 
+### Run Seed
+
+`npm run prisma:seed`
+
+## Live Site
+
+### Database Live
+
+### Frontend Live
+
+### Backend Live
