@@ -13,7 +13,8 @@
 
 - `npx create-next-app@latest client`
   - Using defaults
-- RUN client `docker compose up client`
+- RUN client `docker compose up client` for Docker
+- `npx tailwindcss init -p` init tailwind
 
 ### Build
 
@@ -58,6 +59,10 @@ Use unique_migration_name=init for first migration
 ## Live Site
 
 ### Database Live
+
+- Ensure Database data is seeded by sshing into the API server and running `node dist/prisma/seed.js`
+
+To ssh into the service, use railway cli and get the command from the service via the railway project dashboard.
 
 ### Frontend Live
 
