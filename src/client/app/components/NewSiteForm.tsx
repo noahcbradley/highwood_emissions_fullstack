@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Site, createSite } from "@/lib/api";
 
-interface NewPadFormProps {
+interface NewSiteFormProps {
   onCreated: (site: Site) => void;
 }
 
-export default function NewPadForm({ onCreated }: NewPadFormProps) {
+export default function NewSiteForm({ onCreated }: NewSiteFormProps) {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [emissionLimit, setEmissionLimit] = useState("");
@@ -38,7 +38,7 @@ export default function NewPadForm({ onCreated }: NewPadFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="mb-6 bg-gray-800 p-4 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-4 text-gray-100">Create New Pad</h2>
+      <h2 className="text-lg font-semibold mb-4 text-gray-100">Create New Site</h2>
 
       {error && <p className="text-red-400 mb-2">{error}</p>}
 

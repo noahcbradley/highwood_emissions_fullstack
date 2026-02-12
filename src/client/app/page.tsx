@@ -1,7 +1,7 @@
 "use client"
 
 import { fetchSites, Site } from "@/lib/api";
-import NewPadForm from "./components/NewPadForm";
+import NewSiteForm from "./components/NewSiteForm";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
         <p className="text-gray-400">Real-time Emissions</p>
       </header>
 
-      <NewPadForm onCreated={(newSite) => setSites([newSite, ...sites])} />
+      <NewSiteForm onCreated={(newSite) => setSites([newSite, ...sites])} />
 
       {error && <div className="bg-red-800 text-red-200 p-4 rounded mb-4">{error}</div>}
 
@@ -30,14 +30,20 @@ export default function Home() {
           <thead className="bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Site</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Location</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">% of Emission Limit</th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Total Emissions</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Emission Limit</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
             {sites.map((site) => (
               <tr key={site.id} className="hover:bg-gray-700 transition-colors">
                 <td className="px-6 py-4">{site.name}</td>
+                <td className="px-6 py-4">{site.location}</td>
+                <td className="px-6 py-4">{((site.totalEmissionsToDate /  site.emissionLimit) * 100).toFixed(2)}</td>
                 <td className="px-6 py-4">{site.totalEmissionsToDate.toFixed(2)}</td>
+                <td className="px-6 py-4">{site.emissionLimit.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
