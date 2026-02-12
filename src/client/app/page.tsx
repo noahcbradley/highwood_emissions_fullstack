@@ -1,20 +1,33 @@
 "use client"
 
+import { useState, useEffect, useCallback } from "react"
 import { fetchSites, Site } from "@/lib/api"
 import NewSiteForm from "./components/NewSiteForm"
 import NewEmissionsForm from "./components/NewEmissionsForm"
 import SitesTable from "./components/SitesTable"
-import { useEffect, useState } from "react"
 
 export default function Home() {
   const [sites, setSites] = useState<Site[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  // Fetch the sites from the API
+  const loadSites = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await fetchSites()
+      setSites(data)
+    } catch {
+      setError("Could not load sites")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    fetchSites()
-      .then(setSites)
-      .catch(() => setError("Could not load sites"))
-  }, [])
+    loadSites()
+  }, [loadSites])
 
   return (
     <main className="min-h-screen bg-gray-900 text-gray-100 p-8">
@@ -23,14 +36,17 @@ export default function Home() {
         <p className="text-gray-400">Real-time Emissions</p>
       </header>
 
-      <NewSiteForm onCreated={(newSite) => setSites([newSite, ...sites])} />
+      {/* Form to add a new site */}
+      <NewSiteForm onCreated={(newSite) => setSites((prev) => [newSite, ...prev])} />
 
       {error && <div className="bg-red-800 text-red-200 p-4 rounded mb-4">{error}</div>}
 
-      <SitesTable sites={sites} />
+      {/* Table showing all sites */}
+      <SitesTable sites={sites} loading={loading} />
 
       <div className="mt-6">
-        <NewEmissionsForm />
+        {/* Form to ingest emissions; triggers table refresh on success */}
+        <NewEmissionsForm sites={sites} onSuccess={loadSites} />
       </div>
     </main>
   )
