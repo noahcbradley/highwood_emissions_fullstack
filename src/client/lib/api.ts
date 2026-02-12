@@ -1,38 +1,38 @@
 // lib/api.ts
 export interface Site {
-  id: string;
-  name: string;
-  location: string;
-  emissionLimit: number;
-  totalEmissionsToDate: number;
+  id: string
+  name: string
+  location: string
+  emissionLimit: number
+  totalEmissionsToDate: number
 }
 
 export interface SiteEmission {
-  siteId: string;
-  value: number;
-  timestamp: string;
+  siteId: string
+  value: number
+  timestamp: string
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 export async function fetchSites(): Promise<Site[]> {
-  const res = await fetch(`${API_BASE}/sites`);
-  return res.json();
+  const res = await fetch(`${API_BASE}/sites`)
+  return res.json()
 }
 
 export async function createSite(data: {
-  name: string;
-  location: string;
-  emissionLimit: number;
+  name: string
+  location: string
+  emissionLimit: number
 }): Promise<Site> {
   const res = await fetch(`${API_BASE}/sites`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  });
+  })
 
-  if (!res.ok) throw new Error("Failed to create site");
-  return res.json();
+  if (!res.ok) throw new Error("Failed to create site")
+  return res.json()
 }
 
 export async function createEmissions(readings: SiteEmission[]): Promise<void> {
@@ -40,10 +40,10 @@ export async function createEmissions(readings: SiteEmission[]): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ readings }),
-  });
+  })
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || "Failed to ingest emissions");
+    const text = await res.text()
+    throw new Error(text || "Failed to ingest emissions")
   }
 }

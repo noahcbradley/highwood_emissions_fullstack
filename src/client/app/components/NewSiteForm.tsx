@@ -1,40 +1,40 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Site, createSite } from "@/lib/api";
+import { useState } from "react"
+import { Site, createSite } from "@/lib/api"
 
 interface NewSiteFormProps {
-  onCreated: (site: Site) => void;
+  onCreated: (site: Site) => void
 }
 
 export default function NewSiteForm({ onCreated }: NewSiteFormProps) {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [emissionLimit, setEmissionLimit] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [name, setName] = useState("")
+  const [location, setLocation] = useState("")
+  const [emissionLimit, setEmissionLimit] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
       const newSite = await createSite({
         name,
         location,
         emissionLimit: Number(emissionLimit),
-      });
-      onCreated(newSite);
-      setName("");
-      setLocation("");
-      setEmissionLimit("");
+      })
+      onCreated(newSite)
+      setName("")
+      setLocation("")
+      setEmissionLimit("")
     } catch (err: any) {
-      setError(err.message || "Unknown error");
+      setError(err.message || "Unknown error")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="mb-6 bg-gray-800 p-4 rounded-lg shadow-md">
@@ -79,5 +79,5 @@ export default function NewSiteForm({ onCreated }: NewSiteFormProps) {
         {loading ? "Creating..." : "Create Site"}
       </button>
     </form>
-  );
+  )
 }
