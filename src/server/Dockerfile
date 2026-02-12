@@ -13,6 +13,13 @@ RUN npm install
 # Copy server source code
 COPY . ./ 
 
+# Accept DATABASE_URL as a build argument
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+# Debug: print the variable at build time
+RUN echo "DATABASE_URL at build time: $DATABASE_URL"
+
 # Generate Prisma client
 RUN npx prisma generate
 
