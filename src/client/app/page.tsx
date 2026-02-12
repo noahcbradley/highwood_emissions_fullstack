@@ -2,6 +2,7 @@
 
 import { fetchSites, Site } from "@/lib/api";
 import NewSiteForm from "./components/NewSiteForm";
+import NewEmissionsForm from "./components/NewEmissionsForm";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -49,6 +50,11 @@ export default function Home() {
           </tbody>
         </table>
       </div>
+
+      <div className="mt-6">
+        <NewEmissionsForm />
+      </div>
+
     </main>
   );
 }

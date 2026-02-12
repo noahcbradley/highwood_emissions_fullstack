@@ -47,7 +47,7 @@ export default function NewSiteForm({ onCreated }: NewSiteFormProps) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Pad Name"
+          placeholder="Site Name"
           className="p-2 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         />
@@ -76,7 +76,7 @@ export default function NewSiteForm({ onCreated }: NewSiteFormProps) {
         disabled={loading}
         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
       >
-        {loading ? "Creating..." : "Create Pad"}
+        {loading ? "Creating..." : "Create Site"}
       </button>
     </form>
   );

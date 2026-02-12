@@ -7,6 +7,12 @@ export interface Site {
   totalEmissionsToDate: number;
 }
 
+export interface SiteEmission {
+  siteId: string;
+  value: number;
+  timestamp: string;
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetchSites(): Promise<Site[]> {
@@ -27,4 +33,17 @@ export async function createSite(data: {
 
   if (!res.ok) throw new Error("Failed to create site");
   return res.json();
+}
+
+export async function createEmissions(readings: SiteEmission[]): Promise<void> {
+  const res = await fetch(`${API_BASE}/methane-readings/ingest`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ readings }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Failed to ingest emissions");
+  }
 }
