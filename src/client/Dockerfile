@@ -13,6 +13,13 @@ RUN npm install
 # Copy the rest of the source code
 COPY . .
 
+# Accept NEXT_PUBLIC_API_URL as a build argument
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
+# Debug: print the variable at build time
+RUN echo "NEXT_PUBLIC_API_URL at build time: $NEXT_PUBLIC_API_URL"
+
 # Build the Next.js app for production
 RUN npm run build
 

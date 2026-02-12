@@ -7,7 +7,7 @@ export interface Site {
   totalEmissionsToDate: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetchSites(): Promise<Site[]> {
   const res = await fetch(`${API_BASE}/sites`);
