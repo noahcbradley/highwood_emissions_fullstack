@@ -20,9 +20,11 @@ export default function Home() {
     setLoading(true)
     setError(null)
     try {
-      const data = await fetchSites()
+      let data = await fetchSites()
+      // Sort sites alphabetically by name
+      data = data.slice().sort((a, b) => a.name.localeCompare(b.name))
       setSites(data)
-      // Preselect the first site if none selected
+      // Preselect the first site alphabetically
       if (!selectedSiteId && data.length > 0) {
         setSelectedSiteId(data[0].id)
       }

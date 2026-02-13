@@ -72,9 +72,9 @@ export default function NewEmissionsForm({ sites, onSuccess }: Props) {
         throw new Error("No valid readings found")
       }
 
-      await createEmissions(readings)
+      const res = await createEmissions(readings)
 
-      setSuccess(`Sent ${readings.length} readings`)
+      setSuccess(`Sent ${readings.length} readings. Inserted ${res.recordsInserted} readings. Skipped ${res.recordsSkipped} readings.`)
       setCsv("")
       onSuccess?.()
     } catch (err: any) {

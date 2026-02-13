@@ -7,36 +7,39 @@ export class MethaneReadingService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateMethaneReadingsBatchDto) {
-    if (data.readings.length === 0) return
+    let result: any = {}
+    if (data.readings.length !== 0) {
+      // Insert all readings (skip duplicates)
+      result = await this.prisma.methaneReading.createMany({
+        data: data.readings,
+        skipDuplicates: true,
+      })
 
-    // Insert all readings (skip duplicates)
-    await this.prisma.methaneReading.createMany({
-      data: data.readings,
-      skipDuplicates: true,
-    })
+      // Get affected site IDs
+      const siteIds = Array.from(new Set(data.readings.map((r) => r.siteId)))
 
-    // Get affected site IDs
-    const siteIds = Array.from(new Set(data.readings.map((r) => r.siteId)))
+      // Recalculate totals per site from DB
+      const totalsFromDb = await this.prisma.methaneReading.groupBy({
+        by: ['siteId'],
+        where: { siteId: { in: siteIds } },
+        _sum: { value: true },
+      })
 
-    // Recalculate totals per site from DB
-    const totalsFromDb = await this.prisma.methaneReading.groupBy({
-      by: ['siteId'],
-      where: { siteId: { in: siteIds } },
-      _sum: { value: true },
-    })
+      // Update totalEmissionsToDate for each site
+      const updateOps = totalsFromDb.map((t) =>
+        this.prisma.site.update({
+          where: { id: t.siteId },
+          data: { totalEmissionsToDate: t._sum.value || 0 },
+        }),
+      )
 
-    // Update totalEmissionsToDate for each site
-    const updateOps = totalsFromDb.map((t) =>
-      this.prisma.site.update({
-        where: { id: t.siteId },
-        data: { totalEmissionsToDate: t._sum.value || 0 },
-      }),
-    )
-
-    await this.prisma.$transaction(updateOps)
-
+      await this.prisma.$transaction(updateOps)
+    }
     return {
       success: true,
+      recordsSubmitted: data.readings.length,
+      recordsInserted: result.count, // only the new rows
+      recordsSkipped: data.readings.length - result.count,
     }
   }
 
