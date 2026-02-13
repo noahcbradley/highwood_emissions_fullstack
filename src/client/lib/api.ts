@@ -7,16 +7,33 @@ export interface Site {
   totalEmissionsToDate: number
 }
 
+export interface SiteMetric {
+    siteId: string,
+    name: string,
+    totalEmissionsToDate: number,
+    emissionLimit: number,
+    percentOfLimit: number,
+    complianceStatus: "WITHIN_LIMIT" | "LIMIT_EXCEEDED",
+    lastReadingAt: Date
+}
+
 export interface SiteEmission {
   siteId: string
   value: number
-  timestamp: string
+  timestamp: Date
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 export async function fetchSites(): Promise<Site[]> {
   const res = await fetch(`${API_BASE}/sites`)
+  if (!res.ok) throw new Error("Failed to fetch all sites")
+  return res.json()
+}
+
+export async function fetchSiteMetrics(siteId: string): Promise<SiteMetric> {
+  const res = await fetch(`${API_BASE}/sites/${siteId}/metrics`)
+  if (!res.ok) throw new Error("Failed to fetch site metrics")
   return res.json()
 }
 

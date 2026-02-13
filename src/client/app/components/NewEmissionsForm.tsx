@@ -18,35 +18,45 @@ export default function NewEmissionsForm({ sites, onSuccess }: Props) {
 
   const isNumRecordsInvalid = numRecords < 1 || numRecords > 100
 
-  const parseCsv = (text: string): SiteEmission[] => {
-    const lines = text
-      .split("\n")
-      .map((l) => l.trim())
-      .filter(Boolean)
+ const ISO_TIMESTAMP_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
-    const dataLines = lines[0].toLowerCase().includes("siteid")
-      ? lines.slice(1)
-      : lines
+ const parseCsv = (text: string): SiteEmission[] => {
+  const lines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
 
-    return dataLines.map((line, index) => {
-      const [siteId, value, timestamp] = line.split(",")
+  const dataLines = lines[0].toLowerCase().includes("siteid")
+    ? lines.slice(1)
+    : lines
 
-      if (!siteId || !value || !timestamp) {
-        throw new Error(`Invalid CSV format on line ${index + 1}`)
-      }
+  return dataLines.map((line, index) => {
+    const [siteId, value, timestamp] = line.split(",")
 
-      const parsedValue = Number(value)
-      if (Number.isNaN(parsedValue)) {
-        throw new Error(`Invalid value on line ${index + 1}`)
-      }
+    if (!siteId || !value || !timestamp) {
+      throw new Error(`Invalid CSV format on line ${index + 1}`)
+    }
 
-      return {
-        siteId: siteId.trim(),
-        value: parsedValue,
-        timestamp: timestamp.trim(),
-      }
-    })
-  }
+    // Validate value
+    const parsedValue = Number(value)
+    if (Number.isNaN(parsedValue)) {
+      throw new Error(`Invalid value on line ${index + 1}`)
+    }
+
+    // Validate timestamp format
+    if (!ISO_TIMESTAMP_REGEX.test(timestamp.trim())) {
+      throw new Error(
+        `Invalid timestamp format on line ${index + 1}: "${timestamp.trim()}"`
+      )
+    }
+
+    return {
+      siteId: siteId.trim(),
+      value: parsedValue,
+      timestamp: new Date(timestamp.trim()),
+    }
+  })
+}
 
   const handleSubmit = async () => {
     if (isNumRecordsInvalid) return
@@ -142,7 +152,7 @@ export default function NewEmissionsForm({ sites, onSuccess }: Props) {
           type="button"
           onClick={handleSubmit}
           disabled={loading || isNumRecordsInvalid}
-          className="bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-2 rounded text-white font-medium"
+          className="bg-green-500 hover:bg-green-700 disabled:opacity-50 px-4 py-2 rounded text-white font-medium"
         >
           {loading ? "Ingesting..." : "Ingest"}
         </button>
