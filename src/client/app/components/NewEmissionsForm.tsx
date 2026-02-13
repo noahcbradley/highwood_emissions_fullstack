@@ -74,11 +74,11 @@ export default function NewEmissionsForm({ sites, onSuccess }: Props) {
 
       await createEmissions(readings)
 
-      setSuccess(`Successfully ingested ${readings.length} readings`)
+      setSuccess(`Sent ${readings.length} readings`)
       setCsv("")
       onSuccess?.()
     } catch (err: any) {
-      setError(err.message || "Unknown error")
+      setError("Failed to ingest data, please retry...")
     } finally {
       setLoading(false)
     }

@@ -34,6 +34,10 @@ export class MethaneReadingService {
     )
 
     await this.prisma.$transaction(updateOps)
+
+    return {
+      success: true,
+    }
   }
 
   findAll() {
