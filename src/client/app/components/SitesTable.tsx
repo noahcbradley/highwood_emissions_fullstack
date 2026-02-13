@@ -34,7 +34,7 @@ export default function SitesTable({ sites, loading }: SitesTableProps) {
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Site ID</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">Location</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">
-              % of Emission Limit
+              Percent of Emission Limit
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-200">
               Total Emissions
@@ -51,7 +51,7 @@ export default function SitesTable({ sites, loading }: SitesTableProps) {
               <td className="px-6 py-4">{site.id}</td>
               <td className="px-6 py-4">{site.location}</td>
               <td className="px-6 py-4">
-                {((site.totalEmissionsToDate / site.emissionLimit) * 100).toFixed(2)}
+                {((site.totalEmissionsToDate / site.emissionLimit) * 100).toFixed(2)}%
               </td>
               <td className="px-6 py-4">{site.totalEmissionsToDate.toFixed(2)}</td>
               <td className="px-6 py-4">{site.emissionLimit.toFixed(2)}</td>

@@ -64,7 +64,7 @@ export default function SingleSiteMetrics({ siteId }: SingleSiteMetricsProps) {
         <Metric label="Total Emissions" value={metrics.totalEmissionsToDate.toFixed(2)} />
         <Metric label="Emission Limit" value={metrics.emissionLimit} />
         <Metric
-          label="Percent of Limit"
+          label="Percent of Emission Limit"
           value={`${metrics.percentOfLimit.toFixed(2)}%`}
         />
         <Metric
