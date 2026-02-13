@@ -9,18 +9,18 @@ services:
   #   # depends_on:
   #   #   - server
     
-  # Backend API Server
-  server:
-    build: ./src/server
-    container_name: emissions_server
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./src/server:/app
-      - /app/node_modules
-    command: npm run start:dev
+  # Backend Nest API Server
+  # server:
+  #   build: ./src/server
+  #   container_name: emissions_server
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ./src/server:/app
+  #     - /app/node_modules
+  #   command: npm run start:dev
 
-  # Database
+  # Postgres Database
   postgres:
     image: postgres:16-alpine
     container_name: emissions_postgres
