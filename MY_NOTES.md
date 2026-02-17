@@ -66,7 +66,7 @@ To ssh into the service, use railway cli and get the command from the service vi
 
 ### Frontend Live
 
-Vercel
+Railway
 
 ### Backend Live
 

@@ -2,13 +2,13 @@
 
 ## 1. System Overview
 
-This project implements the core of an **Emissions Ingestion & Analytics Engine** designed to safely ingest methane emissions data under unreliable network conditions while preserving **data integrity, correctness, and developer ergonomics**.
+This project implements the core of the **Emissions Ingestion & Analytics Engine** designed to safely ingest methane emissions data under unreliable network conditions while preserving **data integrity, correctness, and developer ergonomics**.
 
 The system is composed of:
 
 * **Backend API** (NestJS + Prisma)
 * **Frontend Dashboard** (Next.js)
-* **PostgreSQL** as the system of record
+* **PostgreSQL** as the database system
 * **Docker Compose** for one-command local development
 * **Railway** for production deployment
 
@@ -16,7 +16,6 @@ The architecture prioritizes:
 
 * **Idempotency**
 * **Atomic transactions**
-* **Clear separation of concerns**
 * **Simple but extensible data modeling**
 
 ---
@@ -28,20 +27,23 @@ The architecture prioritizes:
 The backend is built using **NestJS**, following a conventional layered architecture:
 
 ```text
-src/
- ├─ modules/
+server/
+ ├─ src/
  │   ├─ sites/
  │   │   ├─ sites.controller.ts
+ │   │   ├─ sites.module.ts
  │   │   ├─ sites.service.ts
  │   │   └─ dto/
- │   ├─ ingest/
- │   │   ├─ ingest.controller.ts
- │   │   ├─ ingest.service.ts
+ │   ├─ methane-reading/
+ │   │   ├─ methane-reading.controller.ts
+ │   │   ├─ methane-reading.module.ts
+ │   │   ├─ methane-reading.service.ts
  │   │   └─ dto/
- ├─ prisma/
- │   └─ schema.prisma
- └─ common/
-     └─ error-handling/
+ └─ prisma/
+     ├─ prisma.module.ts
+     ├─ prisma.service.ts
+     ├─ schema.prisma
+     └─ seed.ts
 ```
 
 * **Controllers** handle HTTP concerns only.
@@ -59,19 +61,19 @@ This structure supports **platform-style development**, where additional teams c
 
 The database uses **two core tables**:
 
-#### `sites`
+#### `Site`
 
-* Represents an industrial asset (e.g., well pad).
+* Represents an industrial asset (e.g., well site).
 * Stores:
 
-  * `emission_limit`
-  * `total_emissions_to_date`
+  * `emissionLimit`
+  * `totalEmissionsToDate`
   * Metadata
 
-#### `measurements`
+#### `MethaneReading`
 
 * Stores raw methane readings.
-* Each row belongs to a `site_id`.
+* Each row belongs to a `siteId`.
 * Enforced uniqueness ensures idempotency.
 
 ```prisma
@@ -80,9 +82,15 @@ The database uses **two core tables**:
 
 This constraint guarantees **no duplicate ingestion for the same measurement window**, even under retries.
 
+```prisma
+@@index([siteId])
+```
+
+This constraint allows for quickly updating the total emissions for a site after a insertion of emission records.
+
 ### 3.2 Design Rationale
 
-* **Denormalized summary (`total_emissions_to_date`)** allows fast reads for dashboards.
+* **Denormalized summary (`totalEmissionsToDate`)** allows fast reads for dashboards.
 * **Raw measurements preserved** for auditability and reprocessing.
 * Minimal schema reduces complexity while remaining extensible.
 
@@ -128,13 +136,13 @@ This provides a solid foundation for future enhancements such as optimistic lock
 The frontend is built with **Next.js (App Router)** and structured around reusable components:
 
 ```text
-src/
- ├─ components/
- │   ├─ SitesTable.tsx
- │   ├─ IngestForm.tsx
+client/
+ ├─ lib/
+ │   └─ api.ts
  ├─ app/
+ │   ├─ layout.tsx
  │   ├─ page.tsx
- │   └─ sites/
+ │   └─ components/
 ```
 
 ### Key characteristics
@@ -173,6 +181,32 @@ This command:
 
 This separation prevents local/dev concerns from leaking into production.
 
+### 7.3 Local Development Without Docker (Primary Workflow)
+
+For most day-to-day development, services are run directly on the host machine to enable faster startup, hot reload, and easier debugging. Docker is used only for the database.
+
+#### Database
+
+```bash
+docker compose up postgres -d
+```
+
+#### Backend API Server
+
+```bash
+npm run start:dev
+```
+
+Requires .env file in /src/server with `DATABASE_URL=postgresql://emissions:emissions@localhost:5432/emissions`
+
+#### Frontend Client
+
+```bash
+npm run dev
+```
+
+Requires .env file in /src/client with `NEXT_PUBLIC_API_URL=http://localhost:3001`
+
 ---
 
 ## 8. Deployment (Railway)
@@ -196,17 +230,16 @@ Initial seed data is provided to:
 * Enable immediate dashboard visibility
 * Support local testing without manual setup
 
-Seeding runs automatically during container startup in development.
+Seeding runs automatically during container startup in development (section 7.1).
 
 ---
 
 ## 10. Observability & Error Handling
 
-* Structured error responses provide consistent API behavior.
-* Prisma constraint errors are explicitly handled and logged.
-* Duplicate ingestion attempts are detectable and traceable.
+* Basic error handling is implemented to prevent unhandled failures and surface meaningful errors during development.
+* Duplicate ingestion attempts can be identified through database constraints and insert results that are reported in the response of each attempted batch insertion.
 
-This forms the foundation for future metrics and alerting.
+While observability is intentionally lightweight in the current implementation, this establishes a starting point for improving structured error responses, frontend feedback, and more comprehensive logging and alerting in future iterations.
 
 ---
 
@@ -242,13 +275,3 @@ Given more time, the following enhancements would be prioritized:
 This architecture emphasizes **correctness first**, recognizing that in emissions reporting, **wrong data is worse than slow data**. The system demonstrates strong fundamentals—atomicity, idempotency, modularity, and operational clarity—while remaining intentionally simple and extensible.
 
 It is designed not just to pass the challenge, but to serve as a foundation a real engineering team could confidently build upon.
-
----
-
-If you want, I can also:
-
-* Tighten this for **senior-level expectations**
-* Add diagrams (Mermaid)
-* Rewrite parts to sound more **platform-engineering focused**
-
-Just say the word.

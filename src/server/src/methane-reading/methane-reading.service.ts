@@ -7,38 +7,49 @@ export class MethaneReadingService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateMethaneReadingsBatchDto) {
-    let result: any = {}
-    if (data.readings.length !== 0) {
-      // Insert all readings (skip duplicates)
-      result = await this.prisma.methaneReading.createMany({
+    if (data.readings.length === 0) {
+      return {
+        success: true,
+        recordsSubmitted: 0,
+        recordsInserted: 0,
+        recordsSkipped: 0,
+      }
+    }
+
+    const siteIds = Array.from(new Set(data.readings.map((r) => r.siteId)))
+
+    // The following transaction ensures atomicity during the creation of new readings
+    const result = await this.prisma.$transaction(async (tx) => {
+      // Insert readings
+      const insertResult = await tx.methaneReading.createMany({
         data: data.readings,
         skipDuplicates: true,
       })
 
-      // Get affected site IDs
-      const siteIds = Array.from(new Set(data.readings.map((r) => r.siteId)))
-
-      // Recalculate totals per site from DB
-      const totalsFromDb = await this.prisma.methaneReading.groupBy({
+      // Recalculate totals
+      const totalsFromDb = await tx.methaneReading.groupBy({
         by: ['siteId'],
         where: { siteId: { in: siteIds } },
         _sum: { value: true },
       })
 
-      // Update totalEmissionsToDate for each site
-      const updateOps = totalsFromDb.map((t) =>
-        this.prisma.site.update({
-          where: { id: t.siteId },
-          data: { totalEmissionsToDate: t._sum.value || 0 },
-        }),
+      // Update sites
+      await Promise.all(
+        totalsFromDb.map((t) =>
+          tx.site.update({
+            where: { id: t.siteId },
+            data: { totalEmissionsToDate: t._sum.value || 0 },
+          }),
+        ),
       )
 
-      await this.prisma.$transaction(updateOps)
-    }
+      return insertResult
+    })
+
     return {
       success: true,
       recordsSubmitted: data.readings.length,
-      recordsInserted: result.count, // only the new rows
+      recordsInserted: result.count,
       recordsSkipped: data.readings.length - result.count,
     }
   }
